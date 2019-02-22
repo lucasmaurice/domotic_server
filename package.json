@@ -17,6 +17,7 @@
     "mysql2": "^1.6.1",
     "pug": "^2.0.3",
     "remove-accents": "^0.4.2",
+    "request": "^2.88.0",
     "sequelize": "^4.39.1"
   },
   "devDependencies": {
