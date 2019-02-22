@@ -3,7 +3,7 @@ var router = express.Router();
 const db = require('../model/sql_access.js');
 const crypto = require("../controller/crypto");
 const accents = require('remove-accents');
-const https = require('https');
+const request = require('request');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -12,58 +12,33 @@ router.get('/', function (req, res, next) {
 
 /* POST analysis. */
 router.post('', async (req, res, next) => {
-	console.log("");
-	console.log("");
-	console.log("");
-	console.log("");
-	console.log("");
-	console.log("----------------------------------------------------------------------");
-	console.log("------------------------- NEW CONNECTION -----------------------------");
-	console.log("----------------------------------------------------------------------");
-	console.log("Body:");
-	console.log(req.body);
-	console.log("----------------------------------------------------------------------");
 
 	// Test if the connection is allowed
 	if (! await isConnected(req)) {
-		console.log("Not autorised.");
-		console.log("----------------------------------------------------------------------");
 		res.send(JSON.stringify({ "success": false, "error": "Unauthorised api key." }));
 		res.status(401);
 	} else {
-
-		console.log("Is connected!");
-		console.log("----------------------------------------------------------------------");
 
 		// Find the device in the db.
 		device = await findDevice(req.body.device);
 
 		// Test if the device was found
 		if (!device) {
-			console.log("Device not found.");
-			console.log("----------------------------------------------------------------------");
 			res.send(JSON.stringify({ "success": false, "error": "Device not found." }));
 			res.status(404);
 		} else {
-
-			console.log("Device:");
-			console.log(device.name + "(id: " + device.id + ")");
-			console.log("----------------------------------------------------------------------");
 
 			// Find the action in the db.
 			action = await findAction(device, req.body.stateToSet);
 
 			// Test if the action was found
 			if (!action) {
-				console.log("Action not found.");
-				console.log("----------------------------------------------------------------------");
 				res.send(JSON.stringify({ "success": false, "error": "Action not found." }));
 				res.status(404);
 			} else {
 
-				console.log("Device:");
+				console.log("Action:");
 				console.log(action);
-				console.log("----------------------------------------------------------------------");
 
 				// Will execute the founded action
 				executeAction(action)
@@ -157,24 +132,12 @@ findAction = async (device, actionText) => {
 executeAction = async (action) => {
 	switch (action.method) {
 		case 'api-get':
-			https.get('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY', (resp) => {
-				let data = '';
-
-				// A chunk of data has been recieved.
-				resp.on('data', (chunk) => {
-					data += chunk;
-				});
-
-				// The whole response has been received. Print out the result.
-				resp.on('end', () => {
-					console.log(JSON.parse(data).explanation);
-				});
-			}).on("error", (err) => {
-				console.log("Error: " + err.message);
-			});
+			console.log("Will execute GET call.");
+			request(action.command);
 			break;
 
 		case 'api-post':
+			console.log("Will execute POST call.");
 			break;
 
 		default:
