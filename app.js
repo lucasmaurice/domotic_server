@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 // set db table
 const db = require('./model/sql_access.js');
 
-// if(process.env.RQRSDA_DEVELOPMENT != null || process.env.RQRSDA_DEVELOPMENT === true){
+if(process.env.APP_DEVELOPMENT != null || process.env.APP_DEVELOPMENT === true){
   // In development mode: force drop the table if it already exists
   db.sequelize.sync({force: true}).then(() => {
     console.log('Drop and Resync with { force: true }');
@@ -36,7 +36,7 @@ const db = require('./model/sql_access.js');
     const Init = require('./model/defaults/Init');
     Init.Init(db);
   });
-// }
+}
 
 // ========= END - DATABASE RELATED PART =========
 
