@@ -1,5 +1,5 @@
 const dbConfig = {
-    host: 'db',
+    host: 'localhost',
     database: 'home',
     username: 'api',
     password: 'api'
