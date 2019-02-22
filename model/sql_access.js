@@ -37,18 +37,19 @@ db.actions = require('./Action')(sequelize, Sequelize);
 db.devices = require('./Device')(sequelize, Sequelize);
 db.devicesNames = require('./DeviceName')(sequelize, Sequelize);
 db.methods = require('./Method')(sequelize, Sequelize);
-// db.roles = require('.//Role')(sequelize, Sequelize);
-// db.sessions = require('../models/Session')(sequelize, Sequelize);
-// db.address = require('../models/Address')(sequelize, Sequelize);
-// db.phone = require('../models/Phone')(sequelize, Sequelize);
-// db.referralOrganisation = require('../models/ReferralOrganisation')(sequelize, Sequelize);
+
+db.devicesActions = sequelize.define('devices_actions', {
+	command: {
+		type: Sequelize.STRING(200),
+		allowNull: true
+	}
+});
 
 // associations
-// db.roles.hasMany(db.users);
-// db.users.belongsTo(db.roles);
-// db.users.hasMany(db.sessions);
-// db.sessions.belongsTo(db.users);
-// db.referralOrganisation.hasOne(db.phone);
-// db.referralOrganisation.hasOne(db.address);
+db.devices.hasMany(db.devicesNames);
+db.devicesNames.belongsTo(db.devices);
+db.devices.belongsToMany(db.actions, {through: db.devicesActions})
+db.actions.belongsToMany(db.devices, {through: db.devicesActions})
+db.devicesActions.belongsTo(db.methods);
 
 module.exports = db;
